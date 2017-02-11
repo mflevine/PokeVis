@@ -70,10 +70,10 @@ Below are our final visualization designs, and as for alternative choices, pleas
 ##Project Schedule  
 | Due Date | Task |
 | ------| ------ | 
-| Friday 2/17 | Prototype version of 3 Charts | 
-| Thursday 2/23 | Add design elements to web page  Tweak Charts|
-| Monday 2/26 | Apply Feedback  Attempt Optional Features| 
-| Thursday 3/2 | Tweak to Completion  Film Video|
+| Friday 2/17 | 1. Prototype version of 3 Charts | 
+| Thursday 2/23 | 1. Add design elements to web page  2. Tweak Charts|
+| Monday 2/26 | 1. Apply Feedback  2. Attempt Optional Features| 
+| Thursday 3/2 | 1. Tweak to Completion  2. Film Video|
 
 ##Appendix: Sketches
 ![](img/proposal-sketch1.png)  
@@ -81,6 +81,9 @@ Below are our final visualization designs, and as for alternative choices, pleas
 ![](img/proposal-sketch3.png)  
 ![](img/proposal-sketch4.png)  
 ![](img/proposal-sketch5.png)  
+![](img/proposal-sketch6.png)  
+![](img/proposal-sketch7.png)  
+![](img/proposal-sketch8.png)  
 
 
 
