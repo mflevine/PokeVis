@@ -1,0 +1,110 @@
+<html>
+    <head>
+    </head>
+    <style>
+        text {
+            font: 10px sans-serif;
+            text-anchor: middle;
+        }
+
+        div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 120px;
+            height: 33px;
+            padding: 8px;
+            font: 50px sans-serif;
+            /*background: #ddd;*/
+            /*border: solid 1px #aaa;*/
+            border-radius: 8px;
+            pointer-events: none;
+        }
+    </style>
+    <svg width="3000" height="3000"></svg>
+    <body>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script>
+            var svg = d3.select("svg"),
+                width = +svg.attr("width");
+
+            var div = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", .25);
+
+            function mouseover() {
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 1);
+            }
+
+
+            function mouseout() {
+                div.transition()
+                    .duration(50);
+                    //.style("opacity", .80);
+            }
+            //var format = d3.format(",d");
+            var h = [];
+            var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+            var pack = d3.pack()
+                .size([width, width])
+                .padding(10.5);
+
+
+            d3.csv("Pokeweight1-1.csv", function(d) {
+                d.weight = +d.weight;
+            
+                if (d.weight) return d;
+            }, function(error, classes) {
+                if (error) throw error;
+                var root = d3.hierarchy({children: classes})
+                    .sum(function(d) { return d.weight; })
+                    .each(function(d) {
+                        if (id = d.data.id) {
+                            var id; //, i = id.lastIndexOf(".");
+                            d.id = id;
+                            d.package = d.data.generation;
+                            d.class = d.data.identifier;
+                        //console.log(d.data.identifier);
+                            if (d.data.webid.slice(0,4) == "http") {
+                                console.log("dengyu");
+                                h.push(d.data.webid);
+                            } else {
+                                h.push("http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+d.data.webid+".png");
+                            }
+                        }
+                    });
+                var node = svg.selectAll(".node")
+                    .data(pack(root).leaves())
+                    .enter().append("g")
+                    //.attr("id", d.id)
+                    .attr("class", "node")
+                    //.attr("href", "#")
+                    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+                node.append("circle")
+                    .attr("id", function(d) { return d.id; })
+                    .attr("r", function(d) { return d.r; })
+                    .on("mouseover", mouseover)
+                    .on("mousemove", function(d) {
+                        console.log(d.id, h[d.id]);
+                        div
+                            //.html("<span style='color:red'><img src='http://pokeunlock.com/wp-content/uploads/2015/01/001.png' width = '520px' height = '520px'></span> <span style='color:blue'><h2>Mali !!!!!!! </h2></span>")
+                            .html("<span style='color:red'><img src="+h[d.id]+" width = '520px' height = '520px'></span> <span style='color:blue'><h1>"+ d.data.identifier +"</h1></span>")
+                        //.html("<span style='color:red'><h1>Tombouctou Region</h1><br><ahref='http://en.wikipedia.org/wiki/Tombouctou_Region'><img src='http://upload.wikimedia.org/wikipedia/commons/b/b3/Mali_Tombouctou.png'></ahref></span> <span style='color:blue'><h2>Mali !!!!!!! </h2></span>")
+                            .style("left", (d3.event.pageX + 34) + "px" )
+                            .style("top", (d3.event.pageY + 12) + "px" );
+                    })
+                    .on("mouseout", mouseout)
+                    .style("fill", function(d) { return color(d.package); });
+
+                node.append("clipPath")
+                    .attr("id", function(d) { return "clip-" + d.id; })
+                    .append("use")
+                    .attr("xlink:href", function(d) { return "#" + d.id; });
+
+            });
+        </script>
+    </body>
+</html>
