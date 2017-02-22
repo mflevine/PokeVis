@@ -13,7 +13,7 @@ body {
 .axis line {
   fill: none;
   stroke: #D4D8DA;
-  stroke-width: 2px;
+  stroke-width: 2px;  
   shape-rendering: crispEdges;
 }
 #radarchart {
@@ -85,6 +85,7 @@ function radarAdd(p){
           id: pokemon[poke]['#'],
           name: pokemon[poke].Name,
           color: typecolor[pokemon[poke]['Type 1']],
+          gen: pokemon[poke]['Generation'],
           total: +pokemon[poke].Total,
           axis: [
             {'stat': 'HP' ,'value': +pokemon[poke]['HP']},
@@ -122,8 +123,8 @@ var config = {
     h: height,
     maxValue: 160,
     levels: 5,
-    ExtraWidthX: 300,
-    TranslateX: 160
+    ExtraWidthX: 400,
+    TranslateX: 100
 }
 
 webshim.setOptions('forms', {
