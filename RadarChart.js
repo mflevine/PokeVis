@@ -178,8 +178,8 @@ var RadarChart = {
                           // .style("top", d3.event.pageY-50 + "px")
                           .style("display", "inline-block")
                          .html((data[this.id].name))
-                         .style("left", d3.mouse(this)[0]-(document.getElementById("toolTip").getBoundingClientRect().width/2)+101+cfg.TranslateX + "px")
-                         .style("top", d3.mouse(this)[1]+35+ "px")
+                         .style("left", d3.event.pageX-(document.getElementById("toolTip").getBoundingClientRect().width/2) + "px")
+                         .style("top", d3.event.pageY- 50+ "px")
                         })
                .on('mouseout', function(){
                         g.selectAll("polygon")
@@ -228,7 +228,7 @@ var RadarChart = {
               tooltip
                 .style("display", "inline-block")
                 .html((data[this.id].name)+"<br>"+(d.stat) + "<br><span>" + (d.value) + "</span>")
-                .style("left", d3.mouse(this)[0]-(document.getElementById("toolTip").getBoundingClientRect().width/2)+101+cfg.TranslateX + "px")
+                .style("left", d3.event.pageX-(document.getElementById("toolTip").getBoundingClientRect().width/2)+ "px")
                 .style("top", d3.event.pageY - 95 + "px")
               })
          .on("mouseout", function(d){ tooltip.style("display", "none");});

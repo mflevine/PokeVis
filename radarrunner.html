@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+</head>
+<style>
+body {
+  background-color: #F1F3F3    
+}
+.axis {
+	font: 15px sans-serif;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #D4D8DA;
+  stroke-width: 2px;  
+  shape-rendering: crispEdges;
+}
+#radarchart {
+	position: absolute;
+	top: 50px;
+	left: 100px;
+}
+  
+.toolTip {
+  pointer-events: none;
+	position: absolute;
+    display: none;
+  min-width: 50px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  padding: 9px 14px 6px 14px;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 1.3;
+  color: #5B6770;
+  box-shadow: 0px 3px 9px rgba(0, 0, 0, .15);
+}
+.toolTip:after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid white;
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  margin-left: -12px;
+}  
+.toolTip span {
+	font-weight: 500;
+  color: #081F2C;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+<script src="http://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="RadarChart.js"></script>
+<body>
+  <div id='input'>
+    <form id='radarform' method="post" action="javascript:radarAdd()">
+      <input id='box' type='text' list='pokemons' placeholder='Enter Pokemon' data-list-filter="^">
+      <datalist id='pokemons'>
+      </datalist>
+      <button id='Add' type="button" value="Add">Add</button>
+      <button id='Clear' type="button" value="Clear">Clear</button>
+    </form>
+  </div>
+</body>
+<script>
+var radardata = []
+var pokemons;
+d3.select('body').append('div').attr('id','radarchart')
+
+function radarAdd(p){
+  if (p) {box.value=p}
+  var pokemon = pokemons
+  if (box.value){
+    for (var poke in pokemon){
+      if (pokemon[poke].Name == box.value){
+        //console.log('found poke')
+        radardata.push({
+          id: pokemon[poke]['#'],
+          name: pokemon[poke].Name,
+          color: typecolor[pokemon[poke]['Type 1']],
+          gen: pokemon[poke]['Generation'],
+          total: +pokemon[poke].Total,
+          axis: [
+            {'stat': 'HP' ,'value': +pokemon[poke]['HP']},
+            {'stat': 'Attack' ,'value': +pokemon[poke]['Attack']},
+            {'stat': 'Defense' ,'value': +pokemon[poke]['Defense']},
+            {'stat': 'Sp. Atk' ,'value': +pokemon[poke]['Sp. Atk']},
+            {'stat': 'Sp. Def' ,'value': +pokemon[poke]['Sp. Def']},
+            {'stat': 'Speed' ,'value': +pokemon[poke]['Speed']},
+          ]
+        })
+      }
+    }
+    document.getElementById("radarform").reset()
+    if (radardata.length>0){
+      d3.select("#radarchart").selectAll("*").remove();
+      d3.select('#toolTip').remove();
+      RadarChart.draw("#radarchart", radardata, config);
+    }
+  }
+}
+d3.select("#Clear").on("click",function() {
+  radardata=[]
+  d3.select('#radarchart').selectAll('circle').remove()
+  d3.select('#radarchart').selectAll('polygon').remove()
+})
+d3.select("#Add").on("click",function(){
+  radarAdd()
+})
+var width = 300,
+    height = 300;
+
+// Config for the Radar chart
+var config = {
+    w: width,
+    h: height,
+    maxValue: 160,
+    levels: 5,
+    ExtraWidthX: 400,
+    TranslateX: 100
+}
+
+webshim.setOptions('forms', {
+  //replace the default datalist feature with a custom styleable datalist
+  customDatalist: true
+});
+webshim.setOptions('forms-ext', {
+  //replace all input type widgets with a custom styleable feature
+  replaceUI: true // 'auto' || true || false (default)
+});
+
+//load form polyfills
+webshim.polyfill('forms forms-ext');
+
+var typecolor = {'Bug':'#A8B820','Dark': '#705848','Dragon': '#7038F8','Electric':'#F8D030','Fairy':'#EE99AC','Fighting':'# C03028','Fire':'#F08030','Flying':'#A890F0','Ghost':'#705898','Grass':'#78C850','Ground':'#E0C068','Ice':'#98D8D8','Normal':'#A8A878','Poison':'#A040A0','Psychic':'#F85888','Rock':'#B8A038','Steel':'#B8B8D0','Water':'#6890F0'}
+
+
+d3.csv("pokemon.csv", function(pokemon) {
+  console.log(pokemon)
+  pokemons = pokemon
+  radarAdd('Pikachu')
+  // for (var poke in pokemon.slice(0,2)){
+  //   radardata.push({
+  //     name: pokemon[poke].Name,
+  //     color: typecolor[pokemon[poke]['Type 1']],
+  //     total: +pokemon[poke].Total,
+  //     axis: [
+  //       {'stat': 'HP' ,'value': +pokemon[poke]['HP']},
+  //       {'stat': 'Attack' ,'value': +pokemon[poke]['Attack']},
+  //       {'stat': 'Defense' ,'value': +pokemon[poke]['Defense']},
+  //       {'stat': 'Sp. Atk' ,'value': +pokemon[poke]['Sp. Atk']},
+  //       {'stat': 'Sp. Def' ,'value': +pokemon[poke]['Sp. Def']},
+  //       {'stat': 'Speed' ,'value': +pokemon[poke]['Speed']},
+  //     ]
+  //   })
+  // }
+  d3.select('#pokemons').append('select').selectAll('option').data(pokemon.sort(
+    function(a, b){
+   var nameA=a.Name.toLowerCase(), nameB=b.Name.toLowerCase();
+   if (nameA < nameB) //sort string ascending
+    return -1;
+   if (nameA > nameB)
+    return 1;
+   return 0; //default return value (no sorting)
+}))
+    .enter()
+    .append('option')
+    .attr('val',function(d){return d})
+    .text(function(d){return d.Name})
+
+})
+</script>
