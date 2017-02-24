@@ -117,6 +117,41 @@
                     .attr("x", 0)
                     .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
                     .text(function(d) { return d; });
+
+             var colorArray = ["#ff8c00","#7b6888", "#6b486b","#8a89a6","#d0743c", "#98abc5", "#a05d56"]; 
+             var legend = svg.append("g").selectAll("circle")
+                        .data(colorArray)
+                        .enter()
+                        .append("circle")
+                        .attr("class", "legend")
+                        .attr("r", 6.5)
+                        .style("fill", function(d,i) {
+                            return d;
+                        })
+                        .attr("transform", function(d, i) {
+                            return "translate(" +(width * 3 / 5 ) + "," + (20 + i * 20)+ ")";
+                        });
+                // legend.selectAll("circle")
+                //         .data(colorArray)
+                //         .enter()
+                //         .append("circle")
+                //         .attr("class", "legend")
+                //         .attr("r", 5)
+                //         .style("fill", function(d) {
+                //             return d;
+                //         })
+
+                        // .data(colorArray)
+                        // .enter()
+                        //     .attr("class", "legend")
+                        //     .append("circle")
+                        // .attr("r", 5)
+                        // .style("fill", function(d){return d;})
+            
+            
+              
+                        
+                console.log(colorArray);
                 // svg
                 //     .on("click", function() { zoom(root);});
                 // zoomTo([root.x, root.y, root.r * 2 ]);
