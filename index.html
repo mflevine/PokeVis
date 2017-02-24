@@ -66,6 +66,16 @@ div.tooltip {
             pointer-events: none;
             display:inline-block;
         }
+.StacktoolTip {
+  position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #6F257F;
+  padding: 14px;
+  text-align: center;
+}
 
 
 </style>
@@ -125,7 +135,7 @@ d3.csv("norStackData.csv", type, function(error, data) {
       .attr("class", "serie")
       .attr("fill", function(d) { return z(d.key); });
 
-  var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+  var tooltip = d3.select("body").append("div").attr("class", "StacktoolTip");
 	  
   serie.selectAll("rect")
     .data(function(d) { return d; })
