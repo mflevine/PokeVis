@@ -56,6 +56,7 @@ var RadarChart = {
 
 	  //var tooltip;
     var tooltip = d3.select("body").append("div").attr("class", "toolTip").attr('id','toolTip');
+    var pic = d3.select(id).append('img')
     //Circular segments
     for(var j=0; j<cfg.levels; j++){
       var levelFactor = cfg.factor*radius*((j+1)/cfg.levels);
@@ -169,7 +170,9 @@ var RadarChart = {
                         g.selectAll(z)
                          .transition(200)
                          .style("fill-opacity", .7);
-                         })
+                        
+                        })
+
                .on('mousemove', function(){
                           tooltip
                           // .style("left", d3.mouse(this)[0]-(tooltip.width/2)+125 + "px")
@@ -180,12 +183,20 @@ var RadarChart = {
                          .html((data[this.id].name))
                          .style("left", d3.event.pageX-(document.getElementById("toolTip").getBoundingClientRect().width/2) + "px")
                          .style("top", d3.event.pageY- 50+ "px")
+                         var pid = +data[this.id]['id']
+                        if (pid < 100){
+                          pid = '0'+pid
+                        }
+                        var src = "http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+pid+".png";
+                        pic.attr('src',src).attr('style','width:400px;height:400px;display:inline-block')
                         })
                .on('mouseout', function(){
                         g.selectAll("polygon")
                          .transition(200)
                          .style("fill-opacity", cfg.opacityArea);
                         tooltip.style("display", "none");
+                        pic.transition()
+                        .duration(50).style("display", "none");
                });
       // for (var ax in d[key].axis){
       //   var y = d[key].axis[ax]
@@ -243,6 +254,7 @@ var RadarChart = {
       radarlegend.append('text').attr('x',-2.5).attr('y',3).text(function(d) { return d.gen })
         .style('text-align','center').style('font-size','10px').style('fill','white').style('text-shadow','1px 1px #000000')
       radarlegend.append('text').attr('x',10).attr('y',5).text(function(d) { return d.name });
+
     }
 
 
