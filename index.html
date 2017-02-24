@@ -293,8 +293,10 @@ function mouseout() {
 
 
 var h = [];
-var color = d3.scaleOrdinal(d3.schemeCategory20);
-
+//var color = d3.scaleOrdinal(d3.schemeCategory20);
+var color = d3.scaleOrdinal()
+                        .range(["#ff8c00","#7b6888", "#6b486b","#8a89a6","#d0743c", "#98abc5", "#a05d56"]);
+            //generation7, generation3,g4, g2, g6, g1, g5
 var pack = d3.pack()
     .size([width/2, width/2])
     .padding(1.5);
@@ -339,7 +341,7 @@ d3.csv("Pokeweight1-1.csv", function(d) {
         .on("mousemove", function(d) {
             //console.log(d.id, h[d.id]);
             div
-                .html("<span style='color:red'><img src="+h[d.id]+" width = '120px' height = '120px'></span> <span style='color:blue'><h1>"+ d.data.identifier +"</h1></span>")
+                .html("<span style='color:red'><img src="+h[d.id]+" width = '120px' height = '120px'></span> <span style='-webkit-text-stroke: 2.5px #000000;color: white;font-weight: 900'><font size = '6' >"+ d.data.identifier +"</font></span>")
                 .style("left", (d3.event.pageX + 34) + "px" )
                 .style("top", (d3.event.pageY + 12) + "px" );
         })
@@ -350,15 +352,6 @@ d3.csv("Pokeweight1-1.csv", function(d) {
         .attr("id", function(d) { return "clip-" + d.id; })
         .append("use")
         .attr("xlink:href", function(d) { return "#" + d.id; });
-    svg
-        .on("click", function() { zoom(root);});
-    //zoomTo([root.x, root.y, root.r * 2 ]);
-    var force = d3.layout.force()
-        .nodes(node)
-        .size([width/2, width/2])
-        .gravity(.02)
-        .charhe(0)
-        .start();
 
 });
 </script>
