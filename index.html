@@ -13,15 +13,16 @@ body {
 .axis line {
   fill: none;
   stroke: #D4D8DA;
-  stroke-width: 2px;
+  stroke-width: 2px;  
   shape-rendering: crispEdges;
 }
+
 #radarchart {
-	position: absolute;
+/*	position: absolute;*/
 	top: 50px;
 	left: 100px;
 }
-  
+
   .toolTip {
   pointer-events: none;
 	position: absolute;
@@ -52,13 +53,27 @@ body {
 	font-weight: 500;
   color: #081F2C;
 }
+div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 120px;
+            height: 33px;
+            padding: 8px;
+            font: 10px sans-serif;
+            /*background: #ddd;*/
+            /*border: solid 1px #aaa;*/
+            border-radius: 8px;
+            pointer-events: none;
+            display:inline-block;
+        }
 </style>
-<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-<script src="http://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
+<script src="https://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="RadarChart.js"></script>
 <body>
+  <svg id='stackbar' width="960" height="500"></svg>
   <div id='input'>
     <form id='radarform' method="post" action="javascript:radarAdd()">
       <input id='box' type='text' list='pokemons' placeholder='Enter Pokemon' data-list-filter="^">
@@ -68,11 +83,90 @@ body {
       <button id='Clear' type="button" value="Clear">Clear</button>
     </form>
   </div>
+  <div id = 'radarchart'>
+  </div>
+  <svg id = 'bubblechart' width="960" height="960"></svg>
 </body>
 <script>
+var tooltip = d3.select("body").append("div").attr("class", "toolTip").attr('id','stackbartoolTip');
+var svg = d3.select("#stackbar"),
+    margin = {top: 20, right: 60, bottom: 30, left: 40},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var x = d3.scaleBand()
+    .rangeRound([0, width])
+    .padding(0.1)
+    .align(0.1);
+
+var y = d3.scaleLinear()
+    .rangeRound([height, 0]);
+
+var z = d3.scaleOrdinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+var stack = d3.stack()
+    .offset(d3.stackOffsetExpand);
+
+d3.csv("norStackData.csv", type, function(error, data) {
+  if (error) throw error;
+
+  data.sort(function(a, b) { return a[data.columns[1]] / a.total - b[data.columns[1]] / b.total; });
+
+  x.domain(data.map(function(d) { return d.type; }));
+  z.domain(data.columns.slice(1));
+
+  var serie = g.selectAll(".serie")
+    .data(stack.keys(data.columns.slice(1))(data))
+    .enter().append("g")
+      .attr("class", "serie")
+      .attr("fill", function(d) { return z(d.key); });
+
+  serie.selectAll("rect")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+      .attr("x", function(d) { return x(d.data.type); })
+      .attr("y", function(d) { return y(d[1]); })
+      .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+      .attr("width", x.bandwidth());
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + (1.5*height) + ")")
+      .call(d3.axisBottom(x))
+      .selectAll("text").style('font-size',10);
+
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y).ticks(10, "%"))
+      .selectAll("text").style('font-size',12);
+
+  var legend = serie.append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d) { var d = d[d.length - 1]; return "translate(" + (x(d.data.type) + x.bandwidth()) + "," + ((y(d[0]) + y(d[1])) / 2) + ")"; });
+
+  legend.append("line")
+      .attr("x1", -6)
+      .attr("x2", 6)
+      .attr("stroke", "#000");
+
+  legend.append("text")
+      .attr("x", 9)
+      .attr("dy", "0.35em")
+      .attr("fill", "#000")
+      .style("font", "10px sans-serif")
+      .text(function(d) { return d.key; });
+});
+
+function type(d, i, columns) {
+  for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
+  d.total = t;
+  return d;
+}
 var radardata = []
 var pokemons;
-d3.select('body').append('div').attr('id','radarchart')
+// d3.select('body').append('g').append('div').attr('id','radarchart')
 
 function radarAdd(p){
   if (p) {box.value=p}
@@ -85,6 +179,7 @@ function radarAdd(p){
           id: pokemon[poke]['#'],
           name: pokemon[poke].Name,
           color: typecolor[pokemon[poke]['Type 1']],
+          gen: pokemon[poke]['Generation'],
           total: +pokemon[poke].Total,
           axis: [
             {'stat': 'HP' ,'value': +pokemon[poke]['HP']},
@@ -109,6 +204,7 @@ d3.select("#Clear").on("click",function() {
   radardata=[]
   d3.select('#radarchart').selectAll('circle').remove()
   d3.select('#radarchart').selectAll('polygon').remove()
+  d3.select('#radarlegend').remove()
 })
 d3.select("#Add").on("click",function(){
   radarAdd()
@@ -122,8 +218,8 @@ var config = {
     h: height,
     maxValue: 160,
     levels: 5,
-    ExtraWidthX: 300,
-    TranslateX: 160
+    ExtraWidthX: 500,
+    TranslateX: 250
 }
 
 webshim.setOptions('forms', {
@@ -141,8 +237,8 @@ webshim.polyfill('forms forms-ext');
 var typecolor = {'Bug':'#A8B820','Dark': '#705848','Dragon': '#7038F8','Electric':'#F8D030','Fairy':'#EE99AC','Fighting':'# C03028','Fire':'#F08030','Flying':'#A890F0','Ghost':'#705898','Grass':'#78C850','Ground':'#E0C068','Ice':'#98D8D8','Normal':'#A8A878','Poison':'#A040A0','Psychic':'#F85888','Rock':'#B8A038','Steel':'#B8B8D0','Water':'#6890F0'}
 
 
-d3.csv("pokemon.csv", function(pokemon) {
-  console.log(pokemon)
+d3.csv("Pokemon.csv", function(pokemon) {
+  //console.log(pokemon)
   pokemons = pokemon
   radarAdd('Pikachu')
   // for (var poke in pokemon.slice(0,2)){
@@ -175,4 +271,94 @@ d3.csv("pokemon.csv", function(pokemon) {
     .text(function(d){return d.Name})
 
 })
+
+var svg = d3.select("#bubblechart"),
+    width = +svg.attr("width");
+
+var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", .25);
+
+function mouseover() {
+    div.transition()
+        .duration(500)
+        .style("opacity", 1).style("display", "inline-block");;
+}
+
+
+function mouseout() {
+    div.transition()
+        .duration(50).style("display", "none");;
+}
+
+
+var h = [];
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+var pack = d3.pack()
+    .size([width/2, width/2])
+    .padding(1.5);
+
+
+    
+d3.csv("Pokeweight1-1.csv", function(d) {
+    d.weight = +d.weight;
+
+    if (d.weight) return d;
+}, function(error, classes) {
+    if (error) throw error;
+    var root = d3.hierarchy({children: classes})
+        .sum(function(d) { return d.weight; })
+        .each(function(d) {
+            if (id = d.data.id) {
+                var id; 
+                d.id = id;
+                d.package = d.data.generation;
+                d.class = d.data.identifier;
+                if (d.data.webid.slice(0,4) == "http") {
+                    //console.log("dengyu");
+                    h.push(d.data.webid);
+                } else {
+                    h.push("http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+d.data.webid+".png");
+                }
+            }
+        })
+        .sort(function(a, b) { return b.value - a.value;});
+    var focus = root;
+    var    view;
+    var node = svg.selectAll(".node")
+        .data(pack(root).leaves())
+        .enter().append("g")
+        .attr("class", "node")
+        .attr("transform", function(d) { return "translate(" + d.x  + "," + d.y  + ")"; });
+
+    node.append("circle")
+        .attr("id", function(d) { return d.id; })
+        .attr("r", function(d) { return d.r; })
+        .on("mouseover", mouseover)
+        .on("mousemove", function(d) {
+            //console.log(d.id, h[d.id]);
+            div
+                .html("<span style='color:red'><img src="+h[d.id]+" width = '120px' height = '120px'></span> <span style='color:blue'><h1>"+ d.data.identifier +"</h1></span>")
+                .style("left", (d3.event.pageX + 34) + "px" )
+                .style("top", (d3.event.pageY + 12) + "px" );
+        })
+        .on("mouseout", mouseout)
+        .style("fill", function(d) { return color(d.package); });
+
+    node.append("clipPath")
+        .attr("id", function(d) { return "clip-" + d.id; })
+        .append("use")
+        .attr("xlink:href", function(d) { return "#" + d.id; });
+    svg
+        .on("click", function() { zoom(root);});
+    //zoomTo([root.x, root.y, root.r * 2 ]);
+    var force = d3.layout.force()
+        .nodes(node)
+        .size([width/2, width/2])
+        .gravity(.02)
+        .charhe(0)
+        .start();
+
+});
 </script>

@@ -61,7 +61,6 @@
                 if (error) throw error;
                 var root = d3.hierarchy({children: classes})
                     .sum(function(d) { return d.weight; })
-                    .sort(function(a, b) { return b.value - a.value;})
                     .each(function(d) {
                         if (id = d.data.id) {
                             var id; 
@@ -75,7 +74,8 @@
                                 h.push("http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+d.data.webid+".png");
                             }
                         }
-                    });
+                    })
+                    .sort(function(a, b) { return b.value - a.value;});
                 var focus = root;
                 var    view;
                 var node = svg.selectAll(".node")

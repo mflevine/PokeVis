@@ -32,10 +32,10 @@ var RadarChart = {
         return 1;
       return 0;
     }
-    var unsorted = d
+    var unsorted = d.slice(0)
     d = d.sort(compare)
     var data = d
-    cfg.maxValue = 160;
+    cfg.maxValue = 200;
     
     // var allAxis = (d[0].map(function(i, j){return i.area}));
     //console.log(d[0])
@@ -178,8 +178,8 @@ var RadarChart = {
                           // .style("top", d3.event.pageY-50 + "px")
                           .style("display", "inline-block")
                          .html((data[this.id].name))
-                         .style("left", d3.mouse(this)[0]-(document.getElementById("toolTip").getBoundingClientRect().width/2)+101+cfg.TranslateX + "px")
-                         .style("top", d3.mouse(this)[1]+35+ "px")
+                         .style("left", d3.event.pageX-(document.getElementById("toolTip").getBoundingClientRect().width/2) + "px")
+                         .style("top", d3.event.pageY- 50+ "px")
                         })
                .on('mouseout', function(){
                         g.selectAll("polygon")
@@ -217,9 +217,10 @@ var RadarChart = {
         .style("fill", function(j,i){
           return data[this.id].color
         })//cfg.color(series))
-        .style("stroke-width", "2px")
+        .style("stroke-width", "1px")
         .style("stroke", function(j,i){
-          return data[this.id].color
+          //return data[this.id].color
+          return 'black'
         })//cfg.color(series))
         .style("fill-opacity", .9)
         .on('mouseover', function (d){
@@ -227,7 +228,7 @@ var RadarChart = {
               tooltip
                 .style("display", "inline-block")
                 .html((data[this.id].name)+"<br>"+(d.stat) + "<br><span>" + (d.value) + "</span>")
-                .style("left", d3.mouse(this)[0]-(document.getElementById("toolTip").getBoundingClientRect().width/2)+101+cfg.TranslateX + "px")
+                .style("left", d3.event.pageX-(document.getElementById("toolTip").getBoundingClientRect().width/2)+ "px")
                 .style("top", d3.event.pageY - 95 + "px")
               })
          .on("mouseout", function(d){ tooltip.style("display", "none");});
@@ -235,7 +236,15 @@ var RadarChart = {
         series++;
       };
       series=0;
+      console.log(unsorted)
+      console.log(data)
+      var radarlegend = g.append('g').attr('id','radarlegend').attr('class','radarlegend').selectAll('g').data(unsorted).enter().append('g').attr("transform", function(d, i) { return "translate("+(cfg.TranslateX+120)+"," + (i * 20 + 50)+")"; });
+      radarlegend.append('circle').attr('r',6).attr('fill',function(d){return d.color}).attr('stroke','black')
+      radarlegend.append('text').attr('x',-2.5).attr('y',3).text(function(d) { return d.gen })
+        .style('text-align','center').style('font-size','10px').style('fill','white').style('text-shadow','1px 1px #000000')
+      radarlegend.append('text').attr('x',10).attr('y',5).text(function(d) { return d.name });
     }
+
 
 
 // var tooltip = d3.select("body").append("div").attr("class", "toolTip");
