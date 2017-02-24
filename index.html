@@ -66,6 +66,8 @@ div.tooltip {
             pointer-events: none;
             display:inline-block;
         }
+
+
 </style>
 <script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
@@ -123,13 +125,25 @@ d3.csv("norStackData.csv", type, function(error, data) {
       .attr("class", "serie")
       .attr("fill", function(d) { return z(d.key); });
 
+  var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+	  
   serie.selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
       .attr("x", function(d) { return x(d.data.type); })
       .attr("y", function(d) { return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-      .attr("width", x.bandwidth());
+      .attr("width", x.bandwidth())
+	  .on("mouseover", function(d,i) {
+				  
+                  tooltip
+                        .style("left", d3.event.pageX - 50 + "px")
+                        .style("top", d3.event.pageY - 70 + "px")
+                        .style("display", "inline-block")
+                        .html("Type: "+d.data.type+"<br>"+"Number of Pokemon: "+ Math.round((d[1] - d[0])*d.data.total));
+              }) 
+      .on("mouseout", function(d) {
+                  tooltip.style("display", "none");});
 
   g.append("g")
       .attr("class", "axis axis--x")
