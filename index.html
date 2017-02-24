@@ -88,6 +88,7 @@ div.tooltip {
   <svg id = 'bubblechart' width="960" height="960"></svg>
 </body>
 <script>
+var tooltip = d3.select("body").append("div").attr("class", "toolTip").attr('id','stackbartoolTip');
 var svg = d3.select("#stackbar"),
     margin = {top: 20, right: 60, bottom: 30, left: 40},
     width = +svg.attr("width") - margin.left - margin.right,
@@ -134,11 +135,12 @@ d3.csv("norStackData.csv", type, function(error, data) {
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + (1.5*height) + ")")
       .call(d3.axisBottom(x))
-      .selectAll("text").style('font-size',10);;
+      .selectAll("text").style('font-size',10);
 
   g.append("g")
       .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(10, "%"));
+      .call(d3.axisLeft(y).ticks(10, "%"))
+      .selectAll("text").style('font-size',12);
 
   var legend = serie.append("g")
       .attr("class", "legend")
@@ -202,6 +204,7 @@ d3.select("#Clear").on("click",function() {
   radardata=[]
   d3.select('#radarchart').selectAll('circle').remove()
   d3.select('#radarchart').selectAll('polygon').remove()
+  d3.select('#radarlegend').remove()
 })
 d3.select("#Add").on("click",function(){
   radarAdd()
@@ -215,8 +218,8 @@ var config = {
     h: height,
     maxValue: 160,
     levels: 5,
-    ExtraWidthX: 400,
-    TranslateX: 150
+    ExtraWidthX: 500,
+    TranslateX: 250
 }
 
 webshim.setOptions('forms', {
@@ -235,7 +238,7 @@ var typecolor = {'Bug':'#A8B820','Dark': '#705848','Dragon': '#7038F8','Electric
 
 
 d3.csv("Pokemon.csv", function(pokemon) {
-  console.log(pokemon)
+  //console.log(pokemon)
   pokemons = pokemon
   radarAdd('Pikachu')
   // for (var poke in pokemon.slice(0,2)){
@@ -313,7 +316,7 @@ d3.csv("Pokeweight1-1.csv", function(d) {
                 d.package = d.data.generation;
                 d.class = d.data.identifier;
                 if (d.data.webid.slice(0,4) == "http") {
-                    console.log("dengyu");
+                    //console.log("dengyu");
                     h.push(d.data.webid);
                 } else {
                     h.push("http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+d.data.webid+".png");
@@ -334,7 +337,7 @@ d3.csv("Pokeweight1-1.csv", function(d) {
         .attr("r", function(d) { return d.r; })
         .on("mouseover", mouseover)
         .on("mousemove", function(d) {
-            console.log(d.id, h[d.id]);
+            //console.log(d.id, h[d.id]);
             div
                 .html("<span style='color:red'><img src="+h[d.id]+" width = '120px' height = '120px'></span> <span style='color:blue'><h1>"+ d.data.identifier +"</h1></span>")
                 .style("left", (d3.event.pageX + 34) + "px" )
@@ -349,7 +352,7 @@ d3.csv("Pokeweight1-1.csv", function(d) {
         .attr("xlink:href", function(d) { return "#" + d.id; });
     svg
         .on("click", function() { zoom(root);});
-    zoomTo([root.x, root.y, root.r * 2 ]);
+    //zoomTo([root.x, root.y, root.r * 2 ]);
     var force = d3.layout.force()
         .nodes(node)
         .size([width/2, width/2])

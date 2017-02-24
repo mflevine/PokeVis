@@ -238,7 +238,7 @@ var RadarChart = {
       series=0;
       console.log(unsorted)
       console.log(data)
-      var radarlegend = g.append('g').attr('class','radarlegend').selectAll('g').data(unsorted).enter().append('g').attr("transform", function(d, i) { return "translate("+(width/2+200)+"," + (i * 20 + 50)+")"; });
+      var radarlegend = g.append('g').attr('id','radarlegend').attr('class','radarlegend').selectAll('g').data(unsorted).enter().append('g').attr("transform", function(d, i) { return "translate("+(cfg.TranslateX+120)+"," + (i * 20 + 50)+")"; });
       radarlegend.append('circle').attr('r',6).attr('fill',function(d){return d.color}).attr('stroke','black')
       radarlegend.append('text').attr('x',-2.5).attr('y',3).text(function(d) { return d.gen })
         .style('text-align','center').style('font-size','10px').style('fill','white').style('text-shadow','1px 1px #000000')
