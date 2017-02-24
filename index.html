@@ -376,6 +376,26 @@ d3.csv("Pokeweight1-1.csv", function(d) {
         .attr("id", function(d) { return "clip-" + d.id; })
         .append("use")
         .attr("xlink:href", function(d) { return "#" + d.id; });
+    var colorArray = ["#98abc5","#8a89a6", "7b6888","#6b486b","#a05d56", "#d0743c", "#ff8c00"]; 
+    var legend = svg.selectAll(".legend")
+        .data(colorArray)
+        .enter().append("g")
+        .attr("class", "legend")
+            .attr("transform", function(d, i) {
+                    return "translate(" +(width * 3 / 5 ) + "," + (40 + i * 20)+ ")";
+                });
+        legend.append("circle")
+                .attr("r", 6)
+                .style("fill", function(d) {
+                    return d;
+                });
+        legend.append("text")
+            .attr("dy", ".25em")
+            .attr("dx", "1em")
+            .text(function(d, i) {
+                return "generatoin " + (i + 1);
+            });
+        
 
 });
 </script>
