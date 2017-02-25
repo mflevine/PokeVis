@@ -97,7 +97,15 @@ div.tooltip {
   </div>
   <div id = 'radarchart'>
   </div>
-  <svg id = 'bubblechart' width="960" height="800" transform="translate(100 300)"></svg>
+  <svg id = 'bubblechart' width="960" height="560" transform="translate(100 300)">
+      <text x = "590" y = "35" style="font-weight: bold;"> Weight of Pokémon Bubble Chart</text>
+      <text x = "590" y = "240"> Most of the heavy Pokémon are in generation 7.</text>
+      <text x = "590" y = "260"> Most of the light Pokémon are in generation 1.</text>
+      <text x = "590" y = "280">There are more heavy Pokémon in recent generation.</text>
+      <text x = "590" y = "300"> Heavier Pokémon seems to be stronger. How do they </text>
+      <text x = "590" y = "320"> perform in the game? The radar chart may help you.</text>
+        
+  </svg>
 </body>
 <script>
 var tooltip = d3.select("body").append("div").attr("class", "toolTip").attr('id','stackbartoolTip');
@@ -322,7 +330,7 @@ var color = d3.scaleOrdinal()
                         .range(["#ff8c00","#7b6888", "#6b486b","#8a89a6","#d0743c", "#98abc5", "#a05d56"]);
             //generation7, generation3,g4, g2, g6, g1, g5
 var pack = d3.pack()
-    .size([width/2, width/2])
+    .size([width * 3/5, width * 3 /5])
     .padding(1.5);
 
 
@@ -382,7 +390,7 @@ d3.csv("Pokeweight1-1.csv", function(d) {
         .enter().append("g")
         .attr("class", "legend")
             .attr("transform", function(d, i) {
-                    return "translate(" +(width * 3 / 5 ) + "," + (70 + i * 20)+ ")";
+                    return "translate(" +(width * 7 / 11 ) + "," + (70 + i * 20)+ ")";
                 });
         legend.append("circle")
                 .attr("r", 6)
