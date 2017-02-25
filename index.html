@@ -97,7 +97,7 @@ div.tooltip {
   </div>
   <div id = 'radarchart'>
   </div>
-  <svg id = 'bubblechart' width="960" height="960"></svg>
+  <svg id = 'bubblechart' width="960" height="800" transform="translate(100 300)"></svg>
 </body>
 <script>
 var tooltip = d3.select("body").append("div").attr("class", "toolTip").attr('id','stackbartoolTip');
@@ -393,7 +393,7 @@ d3.csv("Pokeweight1-1.csv", function(d) {
             .attr("dy", ".25em")
             .attr("dx", "1em")
             .text(function(d, i) {
-                return "generatoin " + (i + 1);
+                return "generation " + (i + 1);
             });
         
 
