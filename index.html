@@ -85,6 +85,9 @@ div.tooltip {
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="RadarChart.js"></script>
 <body>
+  <p>Recently, many player of Pokémon Go saw a Pokémon Go second Generation Release update. In the game, there exist a lot of second generation Pokémons. So what’s the difference between different generations?</p>
+  <p>As for the primary type distribution, we visualized them in the below normalized stack bar chart. If user mouse over a certain bar, a tooltip will show the type information and the number of Pokémon. </p>
+  <p>According to the chart, besides the primary type distribution (for example, first generation has a lot of “Poison”, second generation contains a lot of “Fairy”), users are also inform of when a certain primary type is introduced. For example, “Steel” and “Dark” start at second generation, “Flying” is firstly introduced in fifth generation.</p>
   <svg id='stackbar' width="960" height="500"></svg>
   <div id='input'>
     <form id='radarform' method="post" action="javascript:radarAdd()">
