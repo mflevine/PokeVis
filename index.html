@@ -88,7 +88,8 @@ div.tooltip {
   <p>Recently, many player of Pokémon Go saw a Pokémon Go second Generation Release update. In the game, there exist a lot of second generation Pokémons. So what’s the difference between different generations?</p>
   <p>As for the primary type distribution, we visualized them in the below normalized stack bar chart. If user mouse over a certain bar, a tooltip will show the type information and the number of Pokémon. </p>
   <p>According to the chart, besides the primary type distribution (for example, first generation has a lot of “Poison”, second generation contains a lot of “Fairy”), users are also inform of when a certain primary type is introduced. For example, “Steel” and “Dark” start at second generation, “Flying” is firstly introduced in fifth generation.</p>
-  <svg id='stackbar' width="960" height="500"></svg>
+  <svg id='stackbar' width="980" height="500"></svg>
+  <p>In addition, we created a tool to help compare different Pokémon based on their stats. This radar chart allows you to view Pokémon as profiles. In general the bigger the profile, the stronger the Pokémon. You can search for any Pokémon using the search bar and add it to your chart. </p>
   <div id='input'>
     <form id='radarform' method="post" action="javascript:radarAdd()">
       <input id='box' type='text' list='pokemons' placeholder='Enter Pokemon' data-list-filter="^">
@@ -114,7 +115,7 @@ div.tooltip {
 <script>
 var tooltip = d3.select("body").append("div").attr("class", "toolTip").attr('id','stackbartoolTip');
 var svg = d3.select("#stackbar"),
-    margin = {top: 20, right: 60, bottom: 30, left: 40},
+    margin = {top: 20, right: 80, bottom: 30, left: 40},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -129,6 +130,8 @@ var y = d3.scaleLinear()
 
 var z = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+var colortogen = {"#98abc5":'1', "#8a89a6":'2', "#7b6888":'3', "#6b486b":'4', "#a05d56":'5', "#d0743c":'6', "#ff8c00":'7'}
 
 var stack = d3.stack()
     .offset(d3.stackOffsetExpand);
@@ -157,12 +160,11 @@ d3.csv("norStackData.csv", type, function(error, data) {
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
       .attr("width", x.bandwidth())
 	  .on("mouseover", function(d,i) {
-				  
                   tooltip
-                        .style("left", d3.event.pageX - 50 + "px")
-                        .style("top", d3.event.pageY - 70 + "px")
+                        .style("left", d3.event.pageX - 95 + "px")
+                        .style("top", d3.event.pageY - 90 + "px")
                         .style("display", "inline-block")
-                        .html("Type: "+d.data.type+"<br>"+"Number of Pokemon: "+ Math.round((d[1] - d[0])*d.data.total));
+                        .html("Generation: " + colortogen[this.parentNode.getAttribute('fill')] + "<br>Type: "+d.data.type+"<br>"+"Number of Pokemon: "+ Math.round((d[1] - d[0])*d.data.total));
               }) 
       .on("mouseout", function(d) {
                   tooltip.style("display", "none");});
@@ -192,7 +194,7 @@ d3.csv("norStackData.csv", type, function(error, data) {
       .attr("dy", "0.35em")
       .attr("fill", "#000")
       .style("font", "10px sans-serif")
-      .text(function(d) { return d.key; });
+      .text(function(d) { return 'Generation ' + d.key.split('gen')[1]; });
 });
 
 function type(d, i, columns) {
@@ -405,7 +407,7 @@ d3.csv("Pokeweight1-1.csv", function(d) {
             .attr("dy", ".25em")
             .attr("dx", "1em")
             .text(function(d, i) {
-                return "generation " + (i + 1);
+                return "Generation " + (i + 1);
             });
         
 

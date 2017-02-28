@@ -187,6 +187,9 @@ var RadarChart = {
                         if (pid < 100){
                           pid = '0'+pid
                         }
+                        if (pid < 10){
+                          pid = '0'+pid
+                        }
                         var src = "http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+pid+".png";
                         pic.attr('src',src).attr('style','width:400px;height:400px;display:inline-block')
                         })
