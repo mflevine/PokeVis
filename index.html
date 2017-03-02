@@ -1,419 +1,165 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<head>
-</head>
-<style>
-body {
-  background-color: #F1F3F3    
-}
-.axis {
-	font: 15px sans-serif;
-}
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #D4D8DA;
-  stroke-width: 2px;  
-  shape-rendering: crispEdges;
-}
+<!--<!DOCTYPE HTML>-->
+<!--
+	Landed by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Pokemon Visualization</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body class="landing">
+		<div id="page-wrapper">
 
-#radarchart {
-/*	position: absolute;*/
-	top: 50px;
-	left: 100px;
-}
+			<!-- Header -->
+				
 
-  .toolTip {
-  pointer-events: none;
-	position: absolute;
-    display: none;
-  min-width: 50px;
-  height: auto;
-  background: none repeat scroll 0 0 #ffffff;
-  padding: 9px 14px 6px 14px;
-  border-radius: 2px;
-  text-align: center;
-  line-height: 1.3;
-  color: #5B6770;
-  box-shadow: 0px 3px 9px rgba(0, 0, 0, .15);
-}
-.toolTip:after {
-  content: "";
-  width: 0;
-  height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-top: 12px solid white;
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  margin-left: -12px;
-}  
-.toolTip span {
-	font-weight: 500;
-  color: #081F2C;
-}
-div.tooltip {
-            position: absolute;
-            text-align: center;
-            width: 120px;
-            height: 33px;
-            padding: 8px;
-            font: 10px sans-serif;
-            /*background: #ddd;*/
-            /*border: solid 1px #aaa;*/
-            border-radius: 8px;
-            pointer-events: none;
-            display:inline-block;
-        }
-.StacktoolTip {
-  position: absolute;
-  display: none;
-  min-width: 80px;
-  height: auto;
-  background: none repeat scroll 0 0 #ffffff;
-  border: 1px solid #6F257F;
-  padding: 14px;
-  text-align: center;
-}
+			<!-- Banner -->
+				<section id="banner">
+					<div class="content">
+						<header>
+							<h2>Pokémon Visualization</h2>
+							<h3>Team: Max Levine, Yuchen Liu, Qi Wang</h3>
+							<h4>Recently, many player of Pokémon Go saw a Pokémon Go second Generation Release update. In the game, there are now many second generation Pokémons. So what’s the difference between different generations?</h4>
+						</header>
+						<span class="image"><img src="images/img-1.png" alt="" /></span>
+					</div>
+					<a href="#one" class="goto-next scrolly">Next</a>
+				</section>
 
+			<!-- One -->
+				<section id="one" align = "center" class="spotlight style1 bottom">
+					<!--<span class="image fit main"><img src="images/pic02.jpg" alt="" />-->
+					 	<!--<svg id = 'bubblechart' width="840" height="560" transform="translate(100 300)">-->
+					<!--</span>-->
+					<svg id='stackbar' class="stackbar" width="980" height="500"></svg>
+					<div class="content">
+						<div class="container">
+							<div class="row">
+								<div class="4u 12u$(medium)">
+									<header>
+										<h2>Normalized type distribution</h2>
+									</header>
+								</div>
+								<div class="4u 12u$(medium)">
+									<p>As for the primary type distribution, 
+									we visualized them in the below normalized stack bar chart.
+									If user mouse over a certain bar, a tooltip will show the generation, type and population information. </p>
+								</div>
+								
+								<div class="4u$ 12u$(medium)">
+									<p>According to the chart, besides the primary type distribution
+									, users are also inform of when a certain primary 
+									type is introduced. For example, “Flying” is firstly introduced in fifth generation.</p>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a href="#two" class="goto-next scrolly">Next</a>
+				</section>
 
-</style>
-<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-<script src="https://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="RadarChart.js"></script>
-<body>
-  <p>Recently, many player of Pokémon Go saw a Pokémon Go second Generation Release update. In the game, there exist a lot of second generation Pokémons. So what’s the difference between different generations?</p>
-  <p>As for the primary type distribution, we visualized them in the below normalized stack bar chart. If user mouse over a certain bar, a tooltip will show the type information and the number of Pokémon. </p>
-  <p>According to the chart, besides the primary type distribution (for example, first generation has a lot of “Poison”, second generation contains a lot of “Fairy”), users are also inform of when a certain primary type is introduced. For example, “Steel” and “Dark” start at second generation, “Flying” is firstly introduced in fifth generation.</p>
-  <svg id='stackbar' width="980" height="500"></svg>
-  <p>In addition, we created a tool to help compare different Pokémon based on their stats. This radar chart allows you to view Pokémon as profiles. In general the bigger the profile, the stronger the Pokémon. You can search for any Pokémon using the search bar and add it to your chart. </p>
-  <div id='input'>
-    <form id='radarform' method="post" action="javascript:radarAdd()">
-      <input id='box' type='text' list='pokemons' placeholder='Enter Pokemon' data-list-filter="^">
-      <datalist id='pokemons'>
-      </datalist>
-      <button id='Add' type="button" value="Add">Add</button>
-      <button id='Clear' type="button" value="Clear">Clear</button>
-    </form>
-  </div>
-  <div id = 'radarchart'>
-  </div>
-  <svg id = 'bubblechart' width="840" height="560" transform="translate(100 300)">
-      <text x = "515" y = "35" style="font-weight: bold;"> Weight of Pokémon Bubble Chart</text>
-      <text x = "515" y = "240"> Most of the heavy Pokémon are in generation 7.</text>
-      <text x = "515" y = "260"> Most of the light Pokémon are in generation 1.</text>
-      <text x = "515" y = "280">There are more heavy Pokémon in recent </text>
-      <text x = "515" y = "300"> generation. Heavier Pokémon seems to be stronger.  </text>
-      <text x = "515" y = "320"> How do they perform in the game? </text>
-      <text x = "515" y = "340"> The radar chart may help you.</text>
-        
-  </svg>
-</body>
-<script>
-var tooltip = d3.select("body").append("div").attr("class", "toolTip").attr('id','stackbartoolTip');
-var svg = d3.select("#stackbar"),
-    margin = {top: 20, right: 80, bottom: 30, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			<!-- Two -->
+				<section id="two" class="spotlight style2 right" >
+					<!--<span class="image fit main"><img src="images/pic03.jpg" alt="" /></span>-->
+					<div id='input' >
+						<form id='radarform' method="post" action="javascript:radarAdd()" >
+						<input id='box' style="width:200px" type='text' list='pokemons' placeholder='Enter Pokemon' data-list-filter="^">
+						<datalist id='pokemons' >
+						</datalist>
+						<button id='Add' type="button" value="Add">Add</button>
+						<button id='Clear' type="button" value="Clear">Clear</button>
+						</form>
+					</div>
+					<div id = 'radarchart'>
+					</div>
+					<div class="content">
+						<header>
+							<h2>Pokémon profiles</h2>
+							<p>Compare different Pokémon based on their stats</p>
+						</header>
+						<p>In addition, we created a tool to help compare different Pokémon based on their stats. This radar chart allows you to view Pokémon as profiles. In general the bigger the profile, the stronger the Pokémon. You can search for any Pokémon using the search bar and add it to your chart.</p>
+						
+					</div>
+					<a href="#three" class="goto-next scrolly">Next</a>
+				</section>
 
-var x = d3.scaleBand()
-    .rangeRound([0, width])
-    .padding(0.1)
-    .align(0.1);
+			<!-- Three -->
+				<section id="three" class="spotlight style3 left"  align="right">
+					<!--<span class="image fit main bottom"><img src="images/pic04.jpg" alt="" /></span>-->
+					<!--<div class="image fit main bottom" align="right">-->
+					<!--<span height = "20px"></span>-->
+					<svg id = 'bubblechart' class="bubble" width="840" height="560" ></svg>
+									<!--<div id="bobdiv"></div>-->
+					<!--</div>-->
+					<div class="content">
+						<header>
+							<!--<h2>Interdum felis blandit praesent sed augue</h2>-->
+							<h2>Weight of Pokémon varies with generation</h2> 
+							<!--<p>Accumsan integer ultricies aliquam vel massa sapien phasellus</p>-->
+							<p>Heavier Pokémon seems to be stronger. How do they perform in the game? </p>
+						</header>
+						<!--<p>Feugiat accumsan lorem eu ac lorem amet ac arcu phasellus tortor enim mi mi nisi praesent adipiscing. Integer mi sed nascetur cep aliquet augue varius tempus lobortis porttitor lorem et accumsan consequat adipiscing lorem.</p>-->
+						<p>There are more heavy Pokémon in recent generations.
+							Most of the heavy Pokémon are in generation 7 (orange bubbles).
+							Most of the light Pokémon are in generation 1 (blue bubbles).
+						</p>
 
-var y = d3.scaleLinear()
-    .rangeRound([height, 0]);
+						
+					</div>
+					<a href="#four" class="goto-next scrolly">Next</a>
+				</section>
 
-var z = d3.scaleOrdinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+			<!-- Four -->
+				<section id="four" class="wrapper style1 special fade-up">
+					<div class="container">
+						<header class="major">
+							<h2></br>Tutorial Video</h2>
+							<p>Please enjoy our tutorial video.</p>
+							<video width="960" height="500" controls ><source src="ScreenCast.mp4" type="video/mp4"></video>
+						</header>
+					</div>
+				</section>
 
-var colortogen = {"#98abc5":'1', "#8a89a6":'2', "#7b6888":'3', "#6b486b":'4', "#a05d56":'5', "#d0743c":'6', "#ff8c00":'7'}
+			<!-- Five -->
+				<section id="five" class="wrapper style2 special fade">
+				</section>
 
-var stack = d3.stack()
-    .offset(d3.stackOffsetExpand);
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</footer>
 
-d3.csv("norStackData.csv", type, function(error, data) {
-  if (error) throw error;
+		</div>
 
-  data.sort(function(a, b) { return a[data.columns[1]] / a.total - b[data.columns[1]] / b.total; });
-
-  x.domain(data.map(function(d) { return d.type; }));
-  z.domain(data.columns.slice(1));
-
-  var serie = g.selectAll(".serie")
-    .data(stack.keys(data.columns.slice(1))(data))
-    .enter().append("g")
-      .attr("class", "serie")
-      .attr("fill", function(d) { return z(d.key); });
-
-  var tooltip = d3.select("body").append("div").attr("class", "StacktoolTip");
-	  
-  serie.selectAll("rect")
-    .data(function(d) { return d; })
-    .enter().append("rect")
-      .attr("x", function(d) { return x(d.data.type); })
-      .attr("y", function(d) { return y(d[1]); })
-      .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-      .attr("width", x.bandwidth())
-	  .on("mouseover", function(d,i) {
-                  tooltip
-                        .style("left", d3.event.pageX - 95 + "px")
-                        .style("top", d3.event.pageY - 90 + "px")
-                        .style("display", "inline-block")
-                        .html("Generation: " + colortogen[this.parentNode.getAttribute('fill')] + "<br>Type: "+d.data.type+"<br>"+"Number of Pokemon: "+ Math.round((d[1] - d[0])*d.data.total));
-              }) 
-      .on("mouseout", function(d) {
-                  tooltip.style("display", "none");});
-
-  g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + (1.5*height) + ")")
-      .call(d3.axisBottom(x))
-      .selectAll("text").style('font-size',10);
-
-  g.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(10, "%"))
-      .selectAll("text").style('font-size',12);
-
-  var legend = serie.append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d) { var d = d[d.length - 1]; return "translate(" + (x(d.data.type) + x.bandwidth()) + "," + ((y(d[0]) + y(d[1])) / 2) + ")"; });
-
-  legend.append("line")
-      .attr("x1", -6)
-      .attr("x2", 6)
-      .attr("stroke", "#000");
-
-  legend.append("text")
-      .attr("x", 9)
-      .attr("dy", "0.35em")
-      .attr("fill", "#000")
-      .style("font", "10px sans-serif")
-      .text(function(d) { return 'Generation ' + d.key.split('gen')[1]; });
-});
-
-function type(d, i, columns) {
-  for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
-  d.total = t;
-  return d;
-}
-var radardata = []
-var pokemons;
-// d3.select('body').append('g').append('div').attr('id','radarchart')
-
-function radarAdd(p){
-  if (p) {box.value=p}
-  var pokemon = pokemons
-  if (box.value){
-    for (var poke in pokemon){
-      if (pokemon[poke].Name == box.value){
-        //console.log('found poke')
-        radardata.push({
-          id: pokemon[poke]['#'],
-          name: pokemon[poke].Name,
-          color: typecolor[pokemon[poke]['Type 1']],
-          gen: pokemon[poke]['Generation'],
-          total: +pokemon[poke].Total,
-          axis: [
-            {'stat': 'HP' ,'value': +pokemon[poke]['HP']},
-            {'stat': 'Attack' ,'value': +pokemon[poke]['Attack']},
-            {'stat': 'Defense' ,'value': +pokemon[poke]['Defense']},
-            {'stat': 'Sp. Atk' ,'value': +pokemon[poke]['Sp. Atk']},
-            {'stat': 'Sp. Def' ,'value': +pokemon[poke]['Sp. Def']},
-            {'stat': 'Speed' ,'value': +pokemon[poke]['Speed']},
-          ]
-        })
-      }
-    }
-    document.getElementById("radarform").reset()
-    if (radardata.length>0){
-      d3.select("#radarchart").selectAll("*").remove();
-      d3.select('#toolTip').remove();
-      RadarChart.draw("#radarchart", radardata, config);
-    }
-  }
-}
-d3.select("#Clear").on("click",function() {
-  radardata=[]
-  d3.select('#radarchart').selectAll('circle').remove()
-  d3.select('#radarchart').selectAll('polygon').remove()
-  d3.select('#radarlegend').remove()
-})
-d3.select("#Add").on("click",function(){
-  radarAdd()
-})
-var width = 300,
-    height = 300;
-
-// Config for the Radar chart
-var config = {
-    w: width,
-    h: height,
-    maxValue: 160,
-    levels: 5,
-    ExtraWidthX: 500,
-    TranslateX: 250
-}
-
-webshim.setOptions('forms', {
-  //replace the default datalist feature with a custom styleable datalist
-  customDatalist: true
-});
-webshim.setOptions('forms-ext', {
-  //replace all input type widgets with a custom styleable feature
-  replaceUI: true // 'auto' || true || false (default)
-});
-
-//load form polyfills
-webshim.polyfill('forms forms-ext');
-
-var typecolor = {'Bug':'#A8B820','Dark': '#705848','Dragon': '#7038F8','Electric':'#F8D030','Fairy':'#EE99AC','Fighting':'# C03028','Fire':'#F08030','Flying':'#A890F0','Ghost':'#705898','Grass':'#78C850','Ground':'#E0C068','Ice':'#98D8D8','Normal':'#A8A878','Poison':'#A040A0','Psychic':'#F85888','Rock':'#B8A038','Steel':'#B8B8D0','Water':'#6890F0'}
-
-
-d3.csv("Pokemon.csv", function(pokemon) {
-  //console.log(pokemon)
-  pokemons = pokemon
-  radarAdd('Pikachu')
-  // for (var poke in pokemon.slice(0,2)){
-  //   radardata.push({
-  //     name: pokemon[poke].Name,
-  //     color: typecolor[pokemon[poke]['Type 1']],
-  //     total: +pokemon[poke].Total,
-  //     axis: [
-  //       {'stat': 'HP' ,'value': +pokemon[poke]['HP']},
-  //       {'stat': 'Attack' ,'value': +pokemon[poke]['Attack']},
-  //       {'stat': 'Defense' ,'value': +pokemon[poke]['Defense']},
-  //       {'stat': 'Sp. Atk' ,'value': +pokemon[poke]['Sp. Atk']},
-  //       {'stat': 'Sp. Def' ,'value': +pokemon[poke]['Sp. Def']},
-  //       {'stat': 'Speed' ,'value': +pokemon[poke]['Speed']},
-  //     ]
-  //   })
-  // }
-  d3.select('#pokemons').append('select').selectAll('option').data(pokemon.sort(
-    function(a, b){
-   var nameA=a.Name.toLowerCase(), nameB=b.Name.toLowerCase();
-   if (nameA < nameB) //sort string ascending
-    return -1;
-   if (nameA > nameB)
-    return 1;
-   return 0; //default return value (no sorting)
-}))
-    .enter()
-    .append('option')
-    .attr('val',function(d){return d})
-    .text(function(d){return d.Name})
-
-})
-
-var svg = d3.select("#bubblechart"),
-    width = +svg.attr("width");
-
-var div = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", .25);
-
-function mouseover() {
-    div.transition()
-        .duration(500)
-        .style("opacity", 1).style("display", "inline-block");
-}
-
-
-function mouseout() {
-    div.transition()
-        .duration(50).style("display", "none");
-}
-
-
-var h = [];
-//var color = d3.scaleOrdinal(d3.schemeCategory20);
-var color = d3.scaleOrdinal()
-                        .range(["#ff8c00","#7b6888", "#6b486b","#8a89a6","#d0743c", "#98abc5", "#a05d56"]);
-            //generation7, generation3,g4, g2, g6, g1, g5
-var pack = d3.pack()
-    .size([width * 3/5, width * 3 /5])
-    .padding(1.5);
-
-
-    
-d3.csv("Pokeweight1-1.csv", function(d) {
-    d.weight = +d.weight;
-
-    if (d.weight) return d;
-}, function(error, classes) {
-    if (error) throw error;
-    var root = d3.hierarchy({children: classes})
-        .sum(function(d) { return d.weight; })
-        .each(function(d) {
-            if (id = d.data.id) {
-                var id; 
-                d.id = id;
-                d.package = d.data.generation;
-                d.class = d.data.identifier;
-                if (d.data.webid.slice(0,4) == "http") {
-                    //console.log("dengyu");
-                    h.push(d.data.webid);
-                } else {
-                    h.push("http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+d.data.webid+".png");
-                }
-            }
-        })
-        .sort(function(a, b) { return b.value - a.value;});
-    var focus = root;
-    var    view;
-    var node = svg.selectAll(".node")
-        .data(pack(root).leaves())
-        .enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function(d) { return "translate(" + d.x  + "," + d.y  + ")"; });
-
-    node.append("circle")
-        .attr("id", function(d) { return d.id; })
-        .attr("r", function(d) { return d.r; })
-        .on("mouseover", mouseover)
-        .on("mousemove", function(d) {
-            //console.log(d.id, h[d.id]);
-            div
-                .html("<span style='color:red'><img src="+h[d.id]+" width = '120px' height = '120px'></span> <span style='-webkit-text-stroke: 2.5px #000000;color: white;font-weight: 900'><font size = '6' >"+ d.data.identifier +"</font></span>")
-                .style("left", (d3.event.pageX + 34) + "px" )
-                .style("top", (d3.event.pageY + 12) + "px" );
-        })
-        .on("mouseout", mouseout)
-        .style("fill", function(d) { return color(d.package); });
-
-    node.append("clipPath")
-        .attr("id", function(d) { return "clip-" + d.id; })
-        .append("use")
-        .attr("xlink:href", function(d) { return "#" + d.id; });
-    node.append("title")
-                        .text(function(d) {
-                            return "Weight: " +　d.data.weight/10 + " kg";
-                        });
-    var colorArray = ["#98abc5","#8a89a6", "7b6888","#6b486b","#a05d56", "#d0743c", "#ff8c00"]; 
-    var legend = svg.selectAll(".legend")
-        .data(colorArray)
-        .enter().append("g")
-        .attr("class", "legend")
-            .attr("transform", function(d, i) {
-                    return "translate(" +(width * 7 / 11 ) + "," + (70 + i * 20)+ ")";
-                });
-        legend.append("circle")
-                .attr("r", 6)
-                .style("fill", function(d) {
-                    return d;
-                });
-        legend.append("text")
-            .attr("dy", ".25em")
-            .attr("dx", "1em")
-            .text(function(d, i) {
-                return "Generation " + (i + 1);
-            });
-        
-
-});
-</script>
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+			<script src="https://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
+			<script src="https://d3js.org/d3.v4.min.js"></script>
+			<script src="RadarChart.js"></script>
+			<script src="bubblepack.js"></script>
+			
+			<script src="Radar.js"></script>
+			<script src="stackbar.js"></script>
+			
+			
+	</body>
+</html>
