@@ -87,7 +87,7 @@ var RadarChart = {
        .attr("class", "legend")
        .style("font-family", "sans-serif")
        .style("font-size", "10px")
-       .attr("transform", "translate(" + (cfg.w/2-levelFactor + cfg.ToRight) + ", " + (cfg.h/2-levelFactor) + ")")
+       .attr("transform", "translate(" + (cfg.w/2-levelFactor + cfg.ToRight ) + ", " + (cfg.h/2-levelFactor) + ")")
        .attr("fill", "#737373")
        .text((j+1)*cfg.maxValue/cfg.levels);
     }
@@ -114,6 +114,7 @@ var RadarChart = {
       .text(function(d){return d})
       .style("font-family", "sans-serif")
       .style("font-size", "11px")
+	  .attr("fill", "white")
       .attr("text-anchor", "middle")
       .attr("dy", "1.5em")
       .attr("transform", function(d, i){return "translate(0, -10)"})
@@ -191,7 +192,7 @@ var RadarChart = {
                           pid = '0'+pid
                         }
                         var src = "http://"+"pokeunlock.com/wp-content/uploads/2015/01/"+pid+".png";
-                        pic.attr('src',src).attr('style','width:400px;height:400px;display:inline-block')
+                        pic.attr('src',src).attr('style','width:250px;height:250px;display:inline-block;')
                         })
                .on('mouseout', function(){
                         g.selectAll("polygon")
@@ -252,11 +253,11 @@ var RadarChart = {
       series=0;
       console.log(unsorted)
       console.log(data)
-      var radarlegend = g.append('g').attr('id','radarlegend').attr('class','radarlegend').selectAll('g').data(unsorted).enter().append('g').attr("transform", function(d, i) { return "translate("+(cfg.TranslateX+120)+"," + (i * 20 + 50)+")"; });
+      var radarlegend = g.append('g').attr('id','radarlegend').attr('class','radarlegend').selectAll('g').data(unsorted).enter().append('g').attr("transform", function(d, i) { return "translate("+(cfg.TranslateX+250)+"," + (i * 20 + 50)+")"; });
       radarlegend.append('circle').attr('r',6).attr('fill',function(d){return d.color}).attr('stroke','black')
-      radarlegend.append('text').attr('x',-2.5).attr('y',3).text(function(d) { return d.gen })
+      radarlegend.append('text').attr('x',0.5).attr('y',3).text(function(d) { return d.gen }).attr("fill", "white")
         .style('text-align','center').style('font-size','10px').style('fill','white').style('text-shadow','1px 1px #000000')
-      radarlegend.append('text').attr('x',10).attr('y',5).text(function(d) { return d.name });
+      radarlegend.append('text').attr('x',60).attr('y',4).text(function(d) { return d.name }).attr("fill", "white");
 
     }
 
