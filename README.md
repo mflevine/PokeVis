@@ -5,6 +5,7 @@ Title: Pokémon Visualization
 Names: Max Levine, Yuchen Liu, Qi Wang  
 E-mail Addresses: mflevine@wpi.edu, yliu4@wpi.edu, qwang12@wpi.edu  
 GitHub Ids: mflevine, yliu4, QiWang19  
+Working Link: https://mflevine.github.io/PokeVis/index.html  
 Project Repository: https://github.com/mflevine/PokeVis  
   
 ##Background  
