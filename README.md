@@ -5,7 +5,13 @@ Title: Pokémon Visualization
 Names: Max Levine, Yuchen Liu, Qi Wang  
 E-mail Addresses: mflevine@wpi.edu, yliu4@wpi.edu, qwang12@wpi.edu  
 GitHub Ids: mflevine, yliu4, QiWang19  
+Working Link: https://mflevine.github.io/PokeVis/index.html  
 Project Repository: https://github.com/mflevine/PokeVis  
+  
+##Team
+Max Levine: different versions of second chart (in the final version is a radar chart), writing and optimization  
+Yuchen Liu: different versions of first chart (in the final version is a normalized stack bar chart), writing and optimization  
+Qi Wang: different versions of third chart (in the final version is a bubble pack chart), writing and optimization  
   
 ##Background  
 Our project will be based on the data set from Pokémon. Pokémon is a series of video games developed by Game Freak and Creatures Inc. Over the years, the game has been adapted to animated television shows and movies, comic books, and toys.  Especially, in July 2016, a game for iOS and Android devices named Pokémon Go was released. After releasing, Pokémon Go has become the fastest game to top the App Store and Google Play. There is a popular trend to play this game around the world. So we think it would be meaningful to visualize the data in this series game. This kind of visualization would appeal all the people who played the game or heard of the game.  
